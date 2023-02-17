@@ -1,0 +1,50 @@
+[
+  {
+    "IsSelectable": true,
+    "HasChildren": false,
+    "Level": 0,
+    "Key": "ef85a009-707e-43cf-99bd-c6b1045fc061",
+    "DisplayName": "LSLPD - IT Commercial",
+    "FullyQualifiedName": "LSLPD - IT Commercial",
+    "Description": null,
+    "IsPersonal": false,
+    "ProvisionType": "Automatic",
+    "PermissionModel": "FineGrained",
+    "ParentId": null,
+    "ParentKey": null,
+    "FeedType": "Processes",
+    "Id": 119
+  },
+  {
+    "IsSelectable": true,
+    "HasChildren": false,
+    "Level": 0,
+    "Key": "992332ec-ef73-4a4b-9761-524e29c164e7",
+    "DisplayName": "Tools",
+    "FullyQualifiedName": "Tools",
+    "Description": null,
+    "IsPersonal": false,
+    "ProvisionType": "Manual",
+    "PermissionModel": "InheritFromTenant",
+    "ParentId": null,
+    "ParentKey": null,
+    "FeedType": "Processes",
+    "Id": 46
+  },
+  {
+    "IsSelectable": true,
+    "HasChildren": false,
+    "Level": 0,
+    "Key": "4e069dd2-f53b-4f19-b83b-b93503d84f7d",
+    "DisplayName": "TOOLS - MFS",
+    "FullyQualifiedName": "TOOLS - MFS",
+    "Description": "Tools Modern Folder Structure",
+    "IsPersonal": false,
+    "ProvisionType": "Automatic",
+    "PermissionModel": "FineGrained",
+    "ParentId": null,
+    "ParentKey": null,
+    "FeedType": "Processes",
+    "Id": 199
+  }
+]
