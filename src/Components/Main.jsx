@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Dropdown from "./Dropdown";
 import QueueTableComponent from "./QueueTable";
-import envJsonData from "./Environments.json";
-import queueNamesJsonData from "./QueueNames.json";
-import queueDataJson from "./QueueData.json";
 import Loading from "./Loading";
 
 function Main() {
@@ -15,37 +12,80 @@ function Main() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const mappedData = envJsonData.map((item) => ({
-      id: item.Id,
-      displayValue: item.DisplayName,
-    }));
-    setEnvData(mappedData);
+    //Set URL to fetch Environments
+    const url = "https://uipath.amer.thermo.com/odata/Environments";
+    const options = {
+      headers: {
+        Accept: "application/json",
+        "X-UIPATH-OrganizationUnitId": "199",
+      },
+    };
+    setLoading(true);
+    fetchApi(url, options).then((envJsonData) => {
+      const mappedData = envJsonData.map((item) => ({
+        id: item.Id,
+        displayValue: item.DisplayName,
+      }));
+      setEnvData(mappedData);
+    });
+    setLoading(false);
   }, []);
 
-  function handleEnvDropdownChange(id) {
-    //Remove: Added for testing 'loading' component
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+  const fetchApi = async (url, options) => {
+    return await fetch(url, options)
+      .then((response) => response.json())
+      .catch((error) =>alert("Error while making a request to the api. \nError message: " +error 
+      +"\nURL: "+url));
+  };
 
+  function handleEnvDropdownChange(id) {
+    setLoading(true);
     setEnvSelectedId(id);
-    const mappedData = queueNamesJsonData.value.map((item) => ({
-      id: item.Id,
-      displayValue: item.Name,
-    }));
-    setQueueNames(mappedData);
+    setQueueNameDropdownList(id);
+    setLoading(false);
+  }
+
+  function setQueueNameDropdownList(id) {
+    //Set URL for fetch QueueName
+    const url = "" + id;
+    const options = {
+      headers: {
+        Accept: "application/json",
+        "X-UIPATH-OrganizationUnitId": "199",
+      },
+    };
+
+    fetchApi(url, options).then((queueNamesJsonData) => {
+      const mappedData = queueNamesJsonData.value.map((item) => ({
+        id: item.Id,
+        displayValue: item.Name,
+      }));
+      setQueueNames(mappedData);
+    });
   }
 
   function handleQueueDropdownChange(id) {
     setQueueNameId(id);
-    const mappedData = queueDataJson.value.map((item) => ({
-      QueueDefinitionName: item.QueueDefinitionName,
-      ItemsToProcess: item.ItemsToProcess,
-      ItemsInProgress: item.ItemsInProgress,
-      SuccessfulTransactionsNo: item.SuccessfulTransactionsNo,
-    }));
-    setQueueData(mappedData);
+    //Set URL to get QueueData 
+    const url = "" + id;
+    const options = {
+      headers: {
+        Accept: "application/json",
+        "X-UIPATH-OrganizationUnitId": "199",
+      },
+    };
+
+    setLoading(true);
+    fetchApi(url, options).then((queueDataJson) => {
+      const mappedData = queueDataJson.value.map((item) => ({
+        QueueDefinitionName: item.QueueDefinitionName,
+        ItemsToProcess: item.ItemsToProcess,
+        ItemsInProgress: item.ItemsInProgress,
+        SuccessfulTransactionsNo: item.SuccessfulTransactionsNo,
+      }));
+      setQueueData(mappedData);
+    });
+    setLoading(false);
   }
 
   function clearAll() {
