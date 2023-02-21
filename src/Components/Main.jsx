@@ -10,32 +10,76 @@ function Main() {
   const [queueNameId, setQueueNameId] = useState(0);
   const [queueData, setQueueData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [accessToken, setAccessToken] = useState("");
+
+  useEffect(() => {
+    const data = {
+      tenancyName: "LSG Automation",
+      usernameOrEmailAddress: "amer\\aws-svc-rpa28p",
+      password: "Test1234",
+    };
+    const url="https://uipath.amer.thermo.com/identity/connect/token";
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setAccessToken(data.access_token);
+      })
+      .catch((error) => {
+        alert(
+          "Error while making a request to the api. \nError message: " +
+            error +
+            "\nURL: " +
+            url
+        );
+      });
+  }, []);
 
   useEffect(() => {
     //Set URL to fetch Environments
-    const url = "https://uipath.amer.thermo.com/odata/Environments";
-    const options = {
-      headers: {
-        Accept: "application/json",
-        "X-UIPATH-OrganizationUnitId": "199",
-      },
-    };
-    setLoading(true);
-    fetchApi(url, options).then((envJsonData) => {
-      const mappedData = envJsonData.map((item) => ({
-        id: item.Id,
-        displayValue: item.DisplayName,
-      }));
-      setEnvData(mappedData);
-    });
-    setLoading(false);
-  }, []);
+
+    if (accessToken) {
+      const url = "https://uipath.amer.thermo.com/odata/Environments";
+      const options = {
+        headers: {
+          Accept: "application/json",
+          "X-UIPATH-OrganizationUnitId": "199",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+      setLoading(true);
+      fetchApi(url, options).then((envJsonData) => {
+        const mappedData = envJsonData.map((item) => ({
+          id: item.Id,
+          displayValue: item.DisplayName,
+        }));
+        setEnvData(mappedData);
+      });
+      setLoading(false);
+    }
+  }, [accessToken]);
 
   const fetchApi = async (url, options) => {
     return await fetch(url, options)
       .then((response) => response.json())
-      .catch((error) =>alert("Error while making a request to the api. \nError message: " +error 
-      +"\nURL: "+url));
+      .catch((error) =>
+        alert(
+          "Error while making a request to the api. \nError message: " +
+            error +
+            "\nURL: " +
+            url
+        )
+      );
   };
 
   function handleEnvDropdownChange(id) {
@@ -66,7 +110,7 @@ function Main() {
 
   function handleQueueDropdownChange(id) {
     setQueueNameId(id);
-    //Set URL to get QueueData 
+    //Set URL to get QueueData
     const url = "" + id;
     const options = {
       headers: {
@@ -118,7 +162,7 @@ function Main() {
         <hr />
         {queueNameId > 0 && (
           <div>
-            <label style={{ "font-weight": "bold" }}>Queue Data</label>
+            <label style={{ fontWeight: "bold" }}>Queue Data</label>
             <QueueTableComponent data={queueData} />
           </div>
         )}

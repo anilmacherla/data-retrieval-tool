@@ -16,7 +16,7 @@ const Dropdown = ({ items, onChange, labelText }) => {
 
   return (
     <div className="form-group row">
-      <label className="col-sm-2 col-form-label" style={{'font-weight': "bold"}}>{labelText}</label>
+      <label className="col-sm-2 col-form-label" style={{fontWeight: "bold"}}>{labelText}</label>
       <div className="col-sm-10 form-control">
         <button
           className="btn btn-secondary dropdown-toggle"
